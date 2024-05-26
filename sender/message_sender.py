@@ -4,6 +4,7 @@ from twilio.rest import Client
 from dotenv import load_dotenv
 
 load_dotenv()
+
 account_sid = os.getenv('TWILIO_ACCOUNT_SID')
 auth_token = os.getenv('TWILIO_AUTH_TOKEN')
 client = Client(account_sid, auth_token)
@@ -19,18 +20,12 @@ def send_message(to_number, body):
     )
 
 
-def send_messages(contact_file):
-    with open(contact_file, 'r') as file:
-        contacts = json.load(file)
+def send_messages():
+    with open('contacts.json', 'r') as f:
+        contacts = json.load(f)
     for contact in contacts:
-        phone_number = contact['phone_number']
-        message = contact['message']
-        send_message(phone_number, message)
-
-
-def main():
-    send_messages('contacts.json')
+        send_message(contact['phone_number'], contact['message'])
 
 
 if __name__ == '__main__':
-    main()
+    send_messages()
